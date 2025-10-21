@@ -1,0 +1,2520 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindCare - Saúde Mental nas Escolas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-cyan: #00f5ff;
+            --primary-purple: #b537ff;
+            --primary-pink: #ff006e;
+            --primary-blue: #0066ff;
+            --primary-green: #00ff88;
+            --dark-bg: #0a0a1a;
+            --card-bg: rgba(20, 20, 40, 0.8);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --text-light: #ffffff;
+            --text-gray: #b0b0c8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Enhanced animated background with more complex gradients */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 25%, #0a1a2e 50%, #1a0a2e 75%, #0a0a1a 100%);
+        }
+
+        .animated-bg::before {
+            content: '';
+            position: absolute;
+            width: 300%;
+            height: 300%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 245, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(181, 55, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 0, 110, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 60% 60%, rgba(0, 255, 136, 0.1) 0%, transparent 50%);
+            animation: bgMove 25s ease-in-out infinite;
+        }
+
+        .animated-bg::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 245, 255, 0.03) 2px, rgba(0, 245, 255, 0.03) 4px);
+            animation: scanlines 8s linear infinite;
+        }
+
+        @keyframes bgMove {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(-100px, 50px) rotate(120deg); }
+            66% { transform: translate(50px, -100px) rotate(240deg); }
+        }
+
+        @keyframes scanlines {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(50px); }
+        }
+
+        /* Enhanced intro screen with more dramatic animations */
+        #intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 50%, #0a0a1a 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: fadeOut 1.5s ease-in-out 4s forwards;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        .intro-content {
+            text-align: center;
+            position: relative;
+        }
+
+        .intro-logo {
+            font-size: 6rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--primary-purple), var(--primary-pink), var(--primary-green));
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glowPulse 2s ease-in-out infinite, slideDown 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55), gradientShift 3s ease infinite;
+            filter: drop-shadow(0 0 30px rgba(0, 245, 255, 0.6)) drop-shadow(0 0 60px rgba(181, 55, 255, 0.4));
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { filter: brightness(1) drop-shadow(0 0 30px rgba(0, 245, 255, 0.6)); }
+            50% { filter: brightness(1.5) drop-shadow(0 0 60px rgba(0, 245, 255, 0.8)); }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-150px) scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .intro-subtitle {
+            font-size: 1.8rem;
+            color: var(--text-gray);
+            margin-top: 1.5rem;
+            animation: fadeIn 1.2s ease-out 0.8s both, shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        .loading-bar {
+            width: 400px;
+            height: 6px;
+            background: var(--glass-bg);
+            margin: 3rem auto;
+            border-radius: 10px;
+            overflow: hidden;
+            animation: fadeIn 1s ease-out 1.5s both;
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
+        }
+
+        .loading-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--primary-purple), var(--primary-pink), var(--primary-green));
+            background-size: 200% 100%;
+            animation: loadProgress 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards, gradientMove 1.5s linear infinite;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.6);
+        }
+
+        @keyframes loadProgress {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        /* Enhanced login screen with 3D effects */
+        #login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9998;
+            opacity: 0;
+            animation: fadeIn 1.2s ease-out 4.5s forwards;
+        }
+
+        .login-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 30px;
+            padding: 3.5rem;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 245, 255, 0.2);
+            animation: scaleIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) 5s both, float 6s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 245, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.7) rotateX(20deg);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) rotateX(0deg);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-header h2 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--primary-purple), var(--primary-pink));
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.8rem;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        .login-header p {
+            color: var(--text-gray);
+            font-size: 1.05rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.8rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.7rem;
+            color: var(--text-gray);
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 1.2rem 1.2rem 1.2rem 3.5rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 18px;
+            color: var(--text-light);
+            font-size: 1.05rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary-cyan);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 30px rgba(0, 245, 255, 0.4), inset 0 0 20px rgba(0, 245, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 1.2rem;
+            bottom: 1.4rem;
+            color: var(--primary-cyan);
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus + i {
+            color: var(--primary-purple);
+            transform: scale(1.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1.4rem;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--primary-purple), var(--primary-pink));
+            background-size: 200% 200%;
+            border: none;
+            border-radius: 18px;
+            color: var(--text-light);
+            font-size: 1.15rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: 1.5rem;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .login-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .login-btn:hover::before {
+            left: 100%;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(0, 245, 255, 0.5);
+            background-position: 100% 50%;
+        }
+
+        .login-btn:active {
+            transform: translateY(-2px);
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--text-gray);
+            font-size: 0.95rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-footer a {
+            color: var(--primary-cyan);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .login-footer a:hover {
+            color: var(--primary-purple);
+            text-shadow: 0 0 10px rgba(181, 55, 255, 0.5);
+        }
+
+        /* Enhanced main app with fade-in animation */
+        #main-app {
+            display: none;
+            opacity: 0;
+            animation: fadeInApp 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeInApp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Enhanced header with glassmorphism */
+        .main-header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+            padding: 1.8rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--primary-purple), var(--primary-pink));
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease infinite;
+            filter: drop-shadow(0 0 10px rgba(0, 245, 255, 0.3));
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .user-avatar {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--primary-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            font-weight: 700;
+            box-shadow: 0 5px 20px rgba(0, 245, 255, 0.4);
+            transition: all 0.3s ease;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .logout-btn {
+            padding: 0.9rem 1.8rem;
+            background: rgba(255, 0, 110, 0.2);
+            border: 2px solid var(--primary-pink);
+            border-radius: 12px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .logout-btn:hover {
+            background: var(--primary-pink);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 0, 110, 0.4);
+        }
+
+        /* Enhanced navigation with better hover effects */
+        .nav-tabs {
+            display: flex;
+            gap: 1.2rem;
+            padding: 2rem 2.5rem;
+            overflow-x: auto;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-tab {
+            padding: 1.2rem 2.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-tab:hover::before {
+            left: 100%;
+        }
+
+        .nav-tab:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--primary-cyan);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 245, 255, 0.2);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, var(--primary-cyan), var(--primary-purple));
+            border-color: transparent;
+            box-shadow: 0 8px 30px rgba(0, 245, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .nav-tab i {
+            font-size: 1.2rem;
+        }
+
+        /* Enhanced content area */
+        .content {
+            padding: 2.5rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeInSlide 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeInSlide {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Enhanced hero section with parallax effect */
+        .hero-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 35px;
+            padding: 4rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 245, 255, 0.15) 0%, transparent 70%);
+            animation: rotate 25s linear infinite;
+        }
+
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--primary-purple), var(--primary-pink), var(--primary-green));
+            background-size: 200% 100%;
+            animation: gradientMove 3s linear infinite;
+        }
+
+        .hero-section h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--primary-purple), var(--primary-pink), var(--primary-green));
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+            animation: gradientShift 4s ease infinite;
+            filter: drop-shadow(0 0 20px rgba(0, 245, 255, 0.3));
+        }
+
+        .hero-section p {
+            font-size: 1.3rem;
+            color: var(--text-gray);
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            line-height: 1.8;
+        }
+
+        /* Enhanced cards with 3D hover effects */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 2.5rem;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--primary-purple), var(--primary-pink), var(--primary-green));
+            background-size: 200% 100%;
+            animation: gradientMove 3s linear infinite;
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 245, 255, 0.2) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .card:hover::after {
+            width: 500px;
+            height: 500px;
+        }
+
+        .card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 30px 60px rgba(0, 245, 255, 0.3);
+            border-color: var(--primary-cyan);
+        }
+
+        .card-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--primary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.2rem;
+            color: var(--text-light);
+            position: relative;
+            z-index: 1;
+        }
+
+        .card p {
+            color: var(--text-gray);
+            line-height: 1.9;
+            position: relative;
+            z-index: 1;
+            font-size: 1.05rem;
+        }
+
+        .card ul {
+            list-style: none;
+            margin-top: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card ul li {
+            padding: 0.7rem 0;
+            color: var(--text-gray);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .card ul li:hover {
+            color: var(--primary-cyan);
+            transform: translateX(5px);
+        }
+
+        .card ul li::before {
+            content: '✓';
+            color: var(--primary-cyan);
+            font-weight: 900;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        /* Enhanced video section */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2.5rem;
+        }
+
+        .video-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .video-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 245, 255, 0.1) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 0;
+        }
+
+        .video-card:hover::before {
+            opacity: 1;
+        }
+
+        .video-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0, 245, 255, 0.3);
+            border-color: var(--primary-cyan);
+        }
+
+        .video-card iframe {
+            width: 100%;
+            height: 280px;
+            border: none;
+            position: relative;
+            z-index: 1;
+        }
+
+        .video-info {
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .video-info h4 {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .video-info p {
+            color: var(--text-gray);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        /* Enhanced interactive tools */
+        .tool-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .tool-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--primary-purple), var(--primary-pink), var(--primary-green));
+            background-size: 200% 100%;
+            animation: gradientMove 3s linear infinite;
+        }
+
+        .tool-container h3 {
+            font-size: 2.3rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--primary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .quiz-question {
+            margin-bottom: 2.5rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .quiz-question:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(0, 245, 255, 0.2);
+        }
+
+        .quiz-question h4 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .quiz-option {
+            padding: 1.3rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 1.05rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .quiz-option:hover::before {
+            left: 100%;
+        }
+
+        .quiz-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary-cyan);
+            transform: translateX(10px);
+        }
+
+        .quiz-option.selected {
+            background: rgba(0, 245, 255, 0.2);
+            border-color: var(--primary-cyan);
+            box-shadow: 0 5px 20px rgba(0, 245, 255, 0.3);
+            transform: translateX(10px);
+        }
+
+        .submit-btn {
+            padding: 1.3rem 3rem;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--primary-purple));
+            background-size: 200% 200%;
+            border: none;
+            border-radius: 15px;
+            color: var(--text-light);
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(0, 245, 255, 0.4);
+            background-position: 100% 50%;
+        }
+
+        .submit-btn:active {
+            transform: translateY(-2px);
+        }
+
+        .result-box {
+            margin-top: 2.5rem;
+            padding: 2.5rem;
+            background: rgba(0, 245, 255, 0.1);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 20px;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0, 245, 255, 0.2);
+        }
+
+        .result-box.show {
+            display: block;
+            animation: scaleIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .result-box h4 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-cyan);
+        }
+
+        .result-box p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        /* Enhanced mood tracker */
+        .mood-selector {
+            display: flex;
+            justify-content: space-around;
+            margin: 2.5rem 0;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .mood-btn {
+            font-size: 4rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mood-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 245, 255, 0.3) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s ease, height 0.5s ease;
+        }
+
+        .mood-btn:hover::before {
+            width: 200px;
+            height: 200px;
+        }
+
+        .mood-btn:hover {
+            transform: scale(1.3) rotate(10deg);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 245, 255, 0.3);
+        }
+
+        .mood-btn.selected {
+            background: rgba(0, 245, 255, 0.2);
+            border-color: var(--primary-cyan);
+            transform: scale(1.3);
+            box-shadow: 0 10px 30px rgba(0, 245, 255, 0.4);
+        }
+
+        .mood-history {
+            margin-top: 2.5rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mood-entry {
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 5px solid var(--primary-cyan);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            animation: slideInLeft 0.5s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .mood-entry:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(10px);
+            box-shadow: 0 5px 20px rgba(0, 245, 255, 0.2);
+        }
+
+        /* Enhanced statistics */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            margin-top: 2.5rem;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--primary-purple), var(--primary-pink));
+            background-size: 200% 100%;
+            animation: gradientMove 3s linear infinite;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 245, 255, 0.3);
+            border-color: var(--primary-cyan);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--primary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.8rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .stat-label {
+            color: var(--text-gray);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        /* Enhanced resources */
+        .resource-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin-top: 2.5rem;
+        }
+
+        .resource-item {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resource-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary-cyan), var(--primary-purple), var(--primary-pink));
+            background-size: 100% 200%;
+            animation: gradientMoveVertical 3s linear infinite;
+        }
+
+        @keyframes gradientMoveVertical {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 0% 200%; }
+        }
+
+        .resource-item:hover {
+            transform: translateX(15px);
+            border-color: var(--primary-cyan);
+            box-shadow: 0 15px 40px rgba(0, 245, 255, 0.3);
+        }
+
+        .resource-icon {
+            font-size: 3rem;
+            color: var(--primary-cyan);
+            flex-shrink: 0;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .resource-content h4 {
+            font-size: 1.5rem;
+            margin-bottom: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .resource-content p {
+            color: var(--text-gray);
+            line-height: 1.7;
+            font-size: 1.05rem;
+        }
+
+        .resource-link {
+            color: var(--primary-cyan);
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 0.8rem;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .resource-link:hover {
+            color: var(--primary-purple);
+            transform: translateX(5px);
+            text-shadow: 0 0 10px rgba(181, 55, 255, 0.5);
+        }
+
+        /* Enhanced responsive design */
+        @media (max-width: 768px) {
+            .intro-logo {
+                font-size: 3.5rem;
+            }
+
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-section {
+                padding: 2.5rem 1.5rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .nav-tabs {
+                padding: 1rem;
+                gap: 0.8rem;
+            }
+
+            .nav-tab {
+                padding: 1rem 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .main-header {
+                flex-direction: column;
+                gap: 1.5rem;
+                padding: 1.5rem;
+            }
+
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .content {
+                padding: 1.5rem;
+            }
+
+            .tool-container {
+                padding: 2rem 1.5rem;
+            }
+
+            .mood-btn {
+                font-size: 3rem;
+                padding: 1rem;
+            }
+
+            .resource-item {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Enhanced scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--dark-bg);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--primary-cyan), var(--primary-purple), var(--primary-pink));
+            border-radius: 10px;
+            border: 2px solid var(--dark-bg);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--primary-purple), var(--primary-pink), var(--primary-green));
+        }
+
+        /* Enhanced emergency button with pulse animation */
+        .emergency-btn {
+            position: fixed;
+            bottom: 2.5rem;
+            right: 2.5rem;
+            padding: 1.3rem 2.5rem;
+            background: linear-gradient(135deg, #ff0000, #ff006e);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-weight: 700;
+            font-size: 1.05rem;
+            cursor: pointer;
+            box-shadow: 0 15px 40px rgba(255, 0, 0, 0.5);
+            z-index: 1000;
+            animation: emergencyPulse 2s infinite;
+            transition: all 0.3s ease;
+        }
+
+        @keyframes emergencyPulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 15px 40px rgba(255, 0, 0, 0.5);
+            }
+            50% {
+                transform: scale(1.08);
+                box-shadow: 0 20px 50px rgba(255, 0, 0, 0.7);
+            }
+        }
+
+        .emergency-btn:hover {
+            transform: scale(1.15);
+            box-shadow: 0 20px 50px rgba(255, 0, 0, 0.8);
+        }
+
+        /* Enhanced textarea */
+        textarea {
+            width: 100%;
+            padding: 1.3rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            color: var(--text-light);
+            font-family: inherit;
+            font-size: 1.05rem;
+            resize: vertical;
+            min-height: 120px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-cyan);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 30px rgba(0, 245, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* New section title styling */
+        .section-title {
+            font-size: 2.5rem;
+            margin: 4rem 0 2rem;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--primary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--primary-purple));
+            border-radius: 2px;
+        }
+
+        /* Problem badge styling */
+        .problem-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 245, 255, 0.1);
+            border: 1px solid var(--primary-cyan);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin: 0.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .problem-badge:hover {
+            background: rgba(0, 245, 255, 0.2);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+
+    <!-- INTRO SCREEN -->
+    <div id="intro-screen">
+        <div class="intro-content">
+            <h1 class="intro-logo">MindCare</h1>
+            <p class="intro-subtitle">Cuidando da Saúde Mental nas Escolas</p>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen">
+        <div class="login-container">
+            <div class="login-header">
+                <h2>Bem-vindo(a)</h2>
+                <p>Entre para acessar seu espaço de bem-estar</p>
+            </div>
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="username">Nome de Usuário</label>
+                    <input type="text" id="username" placeholder="Digite seu usuário" required>
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="input-group">
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" placeholder="Digite sua senha" required>
+                    <i class="fas fa-lock"></i>
+                </div>
+                <button type="submit" class="login-btn">Entrar</button>
+            </form>
+            <div class="login-footer">
+                <p>Primeira vez aqui? <a href="#">Crie sua conta</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP -->
+    <div id="main-app">
+        <!-- HEADER -->
+        <header class="main-header">
+            <div class="logo">MindCare</div>
+            <div class="user-info">
+                <div class="user-avatar" id="user-avatar">U</div>
+                <span id="user-name">Usuário</span>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </button>
+            </div>
+        </header>
+
+        <!-- NAVIGATION -->
+        <nav class="nav-tabs">
+            <div class="nav-tab active" onclick="showTab('home')">
+                <i class="fas fa-home"></i> Início
+            </div>
+            <div class="nav-tab" onclick="showTab('problems')">
+                <i class="fas fa-exclamation-circle"></i> Problemas
+            </div>
+            <div class="nav-tab" onclick="showTab('info')">
+                <i class="fas fa-brain"></i> Informações
+            </div>
+            <div class="nav-tab" onclick="showTab('videos')">
+                <i class="fas fa-video"></i> Vídeos
+            </div>
+            <div class="nav-tab" onclick="showTab('tools')">
+                <i class="fas fa-tools"></i> Ferramentas
+            </div>
+            <div class="nav-tab" onclick="showTab('resources')">
+                <i class="fas fa-book"></i> Recursos
+            </div>
+        </nav>
+
+        <!-- CONTENT -->
+        <div class="content">
+            <!-- HOME TAB -->
+            <div id="home" class="tab-content active">
+                <div class="hero-section">
+                    <h1>Sua Saúde Mental Importa</h1>
+                    <p>Um espaço seguro e acolhedor para estudantes cuidarem do bem-estar emocional. Aqui você encontra informações científicas, ferramentas práticas e apoio para lidar com ansiedade, depressão, burnout e outros desafios do ambiente escolar.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">1 em 7</div>
+                        <div class="stat-label">Adolescentes sofrem com transtornos mentais (OMS)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">75%</div>
+                        <div class="stat-label">Relatam estresse acadêmico intenso</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Apoio disponível para você</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Confidencial e seguro</div>
+                    </div>
+                </div>
+
+                <h2 class="section-title">Principais Desafios</h2>
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-sad-tear"></i></div>
+                        <h3>Depressão</h3>
+                        <p>Sentimentos persistentes de tristeza, perda de interesse e baixa energia que afetam o dia a dia escolar e pessoal.</p>
+                        <p style="margin-top: 1rem; color: var(--primary-cyan);"><strong>Prevalência:</strong> 15-20% dos estudantes</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-heartbeat"></i></div>
+                        <h3>Ansiedade</h3>
+                        <p>Preocupação excessiva, nervosismo e sintomas físicos que interferem nas atividades escolares e relacionamentos.</p>
+                        <p style="margin-top: 1rem; color: var(--primary-cyan);"><strong>Prevalência:</strong> 25-30% dos estudantes</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-fire"></i></div>
+                        <h3>Burnout</h3>
+                        <p>Esgotamento físico e mental causado por estresse prolongado e sobrecarga acadêmica constante.</p>
+                        <p style="margin-top: 1rem; color: var(--primary-cyan);"><strong>Impacto:</strong> Reduz desempenho em até 40%</p>
+                    </div>
+                </div>
+
+                <div class="tool-container">
+                    <h3><i class="fas fa-chart-line"></i> Por Que Isso Importa?</h3>
+                    <p style="color: var(--text-gray); font-size: 1.1rem; line-height: 1.9; margin-bottom: 2rem;">
+                        Segundo a Organização Mundial da Saúde (OMS), metade de todos os transtornos mentais começam antes dos 14 anos, mas a maioria dos casos não é detectada nem tratada. O ambiente escolar desempenha um papel crucial na identificação precoce e no apoio aos estudantes.
+                    </p>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h3>Impacto Acadêmico</h3>
+                            <p>Problemas de saúde mental não tratados podem reduzir o desempenho acadêmico em até 40% e aumentar significativamente o risco de evasão escolar.</p>
+                        </div>
+                        <div class="card">
+                            <h3>Desenvolvimento Social</h3>
+                            <p>Afeta a capacidade de formar relacionamentos saudáveis, desenvolver habilidades sociais e construir autoestima positiva.</p>
+                        </div>
+                        <div class="card">
+                            <h3>Futuro Profissional</h3>
+                            <p>Estudantes com suporte adequado têm 60% mais chances de completar seus estudos e alcançar seus objetivos de carreira.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- New PROBLEMS TAB with all 30 issues -->
+            <div id="problems" class="tab-content">
+                <div class="hero-section">
+                    <h1>Problemas Comuns no Ambiente Escolar</h1>
+                    <p>Conheça os 30 principais desafios de saúde mental que afetam estudantes e como identificá-los</p>
+                </div>
+
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+                        <h3>1. Ansiedade de Desempenho</h3>
+                        <p><strong>O que é:</strong> Medo intenso de não corresponder às expectativas acadêmicas, causando sintomas físicos como taquicardia e sudorese.</p>
+                        <p style="margin-top: 1rem;"><strong>Sinais:</strong> Evitar apresentações, procrastinação, insônia antes de avaliações.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-file-alt"></i></div>
+                        <h3>2. Medo de Provas</h3>
+                        <p><strong>O que é:</strong> Ansiedade específica relacionada a situações de avaliação, podendo causar "branco" durante exames.</p>
+                        <p style="margin-top: 1rem;"><strong>Impacto:</strong> Afeta 40% dos estudantes em algum grau.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-heart-broken"></i></div>
+                        <h3>3. Baixa Autoestima</h3>
+                        <p><strong>O que é:</strong> Percepção negativa de si mesmo, sentimento de inadequação e falta de confiança nas próprias capacidades.</p>
+                        <p style="margin-top: 1rem;"><strong>Consequências:</strong> Isolamento social, dificuldade de aprendizado, vulnerabilidade ao bullying.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-star"></i></div>
+                        <h3>4. Perfeccionismo</h3>
+                        <p><strong>O que é:</strong> Busca incessante por padrões irrealistas de perfeição, medo intenso de cometer erros.</p>
+                        <p style="margin-top: 1rem;"><strong>Risco:</strong> Pode levar a burnout, ansiedade e depressão.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-trophy"></i></div>
+                        <h3>5. Pressão por Notas Altas</h3>
+                        <p><strong>O que é:</strong> Estresse causado por expectativas familiares, sociais ou pessoais de excelência acadêmica constante.</p>
+                        <p style="margin-top: 1rem;"><strong>Efeito:</strong> Pode causar ansiedade crônica e perda de motivação intrínseca.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-user-slash"></i></div>
+                        <h3>6. Bullying</h3>
+                        <p><strong>O que é:</strong> Comportamento agressivo repetitivo que causa dano físico, psicológico ou social à vítima.</p>
+                        <p style="margin-top: 1rem;"><strong>Dados:</strong> 30% dos estudantes brasileiros relatam ter sofrido bullying (IBGE).</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-user-friends"></i></div>
+                        <h3>7. Isolamento Social</h3>
+                        <p><strong>O que é:</strong> Dificuldade em formar conexões sociais, sentimento de não pertencimento ao grupo.</p>
+                        <p style="margin-top: 1rem;"><strong>Impacto:</strong> Aumenta risco de depressão em 60%.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-user-secret"></i></div>
+                        <h3>8. Timidez Extrema</h3>
+                        <p><strong>O que é:</strong> Inibição social intensa que impede participação em atividades escolares e interações sociais.</p>
+                        <p style="margin-top: 1rem;"><strong>Diferença:</strong> Vai além da timidez normal, causando sofrimento significativo.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-microphone"></i></div>
+                        <h3>9. Medo de Falar em Público</h3>
+                        <p><strong>O que é:</strong> Ansiedade intensa ao apresentar trabalhos ou falar diante da turma.</p>
+                        <p style="margin-top: 1rem;"><strong>Prevalência:</strong> Afeta 75% das pessoas em algum grau.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-brain"></i></div>
+                        <h3>10. Dificuldade de Concentração</h3>
+                        <p><strong>O que é:</strong> Incapacidade de manter foco em tarefas, distração frequente, dificuldade de reter informações.</p>
+                        <p style="margin-top: 1rem;"><strong>Causas:</strong> Pode estar relacionada a ansiedade, TDAH, estresse ou problemas de sono.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-clock"></i></div>
+                        <h3>11. Procrastinação Crônica</h3>
+                        <p><strong>O que é:</strong> Adiamento persistente de tarefas importantes, mesmo sabendo das consequências negativas.</p>
+                        <p style="margin-top: 1rem;"><strong>Causa raiz:</strong> Frequentemente ligada a ansiedade, perfeccionismo ou medo de falhar.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <h3>12. Estresse Constante</h3>
+                        <p><strong>O que é:</strong> Estado prolongado de tensão física e mental causado por múltiplas demandas acadêmicas.</p>
+                        <p style="margin-top: 1rem;"><strong>Sintomas:</strong> Dores de cabeça, tensão muscular, irritabilidade, fadiga.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-exchange-alt"></i></div>
+                        <h3>13. Dificuldade de Adaptação</h3>
+                        <p><strong>O que é:</strong> Problemas para se ajustar a mudanças escolares, nova escola, novos colegas ou métodos de ensino.</p>
+                        <p style="margin-top: 1rem;"><strong>Período crítico:</strong> Transições entre ciclos escolares são especialmente desafiadoras.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-balance-scale"></i></div>
+                        <h3>14. Comparações com Colegas</h3>
+                        <p><strong>O que é:</strong> Hábito de se comparar constantemente com outros estudantes, gerando sentimentos de inferioridade.</p>
+                        <p style="margin-top: 1rem;"><strong>Agravante:</strong> Redes sociais intensificam esse comportamento.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-question-circle"></i></div>
+                        <h3>15. Crise de Identidade</h3>
+                        <p><strong>O que é:</strong> Confusão sobre quem se é, valores pessoais e lugar no mundo, comum na adolescência.</p>
+                        <p style="margin-top: 1rem;"><strong>Normal:</strong> Faz parte do desenvolvimento, mas pode causar angústia significativa.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-graduation-cap"></i></div>
+                        <h3>16. Insegurança Acadêmica</h3>
+                        <p><strong>O que é:</strong> Dúvida constante sobre a própria capacidade intelectual e habilidades de aprendizado.</p>
+                        <p style="margin-top: 1rem;"><strong>Síndrome do Impostor:</strong> Sentir-se uma fraude apesar de evidências de competência.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-frown"></i></div>
+                        <h3>17. Sentimento de Inadequação</h3>
+                        <p><strong>O que é:</strong> Percepção persistente de não ser bom o suficiente, não se encaixar ou não pertencer.</p>
+                        <p style="margin-top: 1rem;"><strong>Impacto:</strong> Afeta participação em atividades e formação de amizades.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-times-circle"></i></div>
+                        <h3>18. Medo de Falhar</h3>
+                        <p><strong>O que é:</strong> Ansiedade paralisante relacionada à possibilidade de não ter sucesso ou cometer erros.</p>
+                        <p style="margin-top: 1rem;"><strong>Consequência:</strong> Pode impedir de tentar coisas novas ou assumir desafios.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-tasks"></i></div>
+                        <h3>19. Sobrecarregamento de Tarefas</h3>
+                        <p><strong>O que é:</strong> Excesso de trabalhos, provas e atividades extracurriculares causando exaustão.</p>
+                        <p style="margin-top: 1rem;"><strong>Estatística:</strong> 80% dos estudantes relatam sentir-se sobrecarregados.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-battery-empty"></i></div>
+                        <h3>20. Falta de Motivação</h3>
+                        <p><strong>O que é:</strong> Perda de interesse e energia para realizar atividades escolares, apatia generalizada.</p>
+                        <p style="margin-top: 1rem;"><strong>Alerta:</strong> Pode ser sintoma de depressão ou burnout.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-users-slash"></i></div>
+                        <h3>21. Ansiedade Social</h3>
+                        <p><strong>O que é:</strong> Medo intenso de situações sociais, preocupação excessiva com julgamento dos outros.</p>
+                        <p style="margin-top: 1rem;"><strong>Diferença:</strong> Vai além da timidez, é um transtorno de ansiedade diagnosticável.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-home"></i></div>
+                        <h3>22. Dificuldades Familiares</h3>
+                        <p><strong>O que é:</strong> Problemas em casa (conflitos, separação, violência) que afetam o desempenho escolar.</p>
+                        <p style="margin-top: 1rem;"><strong>Impacto:</strong> Dificuldade de concentração, absenteísmo, queda nas notas.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-mobile-alt"></i></div>
+                        <h3>23. Cyberbullying</h3>
+                        <p><strong>O que é:</strong> Bullying realizado através de meios digitais (redes sociais, mensagens, jogos online).</p>
+                        <p style="margin-top: 1rem;"><strong>Gravidade:</strong> Pode ser mais prejudicial que bullying presencial por ser 24/7.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-briefcase"></i></div>
+                        <h3>24. Pressão para Escolher Carreira</h3>
+                        <p><strong>O que é:</strong> Ansiedade relacionada à necessidade de decidir o futuro profissional precocemente.</p>
+                        <p style="margin-top: 1rem;"><strong>Realidade:</strong> Muitos adultos mudam de carreira várias vezes na vida.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-bed"></i></div>
+                        <h3>25. Problemas de Sono</h3>
+                        <p><strong>O que é:</strong> Insônia, sono insuficiente ou de má qualidade causado por estresse escolar.</p>
+                        <p style="margin-top: 1rem;"><strong>Dado:</strong> 70% dos estudantes dormem menos que as 8-10 horas recomendadas.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-weight"></i></div>
+                        <h3>26. Autocobrança Excessiva</h3>
+                        <p><strong>O que é:</strong> Padrões pessoais irrealistas, autocrítica severa, dificuldade de aceitar imperfeições.</p>
+                        <p style="margin-top: 1rem;"><strong>Risco:</strong> Pode levar a transtornos de ansiedade e depressão.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-user-times"></i></div>
+                        <h3>27. Sentimento de Solidão</h3>
+                        <p><strong>O que é:</strong> Sensação de estar sozinho mesmo cercado de pessoas, falta de conexões significativas.</p>
+                        <p style="margin-top: 1rem;"><strong>Paradoxo:</strong> Pode ocorrer mesmo em escolas lotadas.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-hand-holding-heart"></i></div>
+                        <h3>28. Falta de Apoio Emocional</h3>
+                        <p><strong>O que é:</strong> Ausência de pessoas confiáveis para compartilhar sentimentos e buscar suporte.</p>
+                        <p style="margin-top: 1rem;"><strong>Importância:</strong> Rede de apoio é fator protetor crucial para saúde mental.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-meh"></i></div>
+                        <h3>29. Baixo Engajamento Escolar</h3>
+                        <p><strong>O que é:</strong> Desinteresse pelas atividades escolares, sensação de que o aprendizado não tem sentido.</p>
+                        <p style="margin-top: 1rem;"><strong>Causa:</strong> Pode indicar problemas emocionais ou metodologia inadequada.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-cloud-rain"></i></div>
+                        <h3>30. Depressão Escolar</h3>
+                        <p><strong>O que é:</strong> Depressão especificamente relacionada ao ambiente escolar, pressões e experiências negativas.</p>
+                        <p style="margin-top: 1rem;"><strong>Atenção:</strong> Requer intervenção profissional e apoio da escola e família.</p>
+                    </div>
+                </div>
+
+                <div class="tool-container" style="margin-top: 3rem;">
+                    <h3><i class="fas fa-lightbulb"></i> O Que Fazer Se Você Identifica Esses Problemas?</h3>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h3>1. Reconheça e Valide</h3>
+                            <p>Aceite que o que você está sentindo é real e válido. Não minimize seus sentimentos ou compare seu sofrimento com o dos outros.</p>
+                        </div>
+                        <div class="card">
+                            <h3>2. Converse com Alguém</h3>
+                            <p>Compartilhe com um adulto de confiança: pais, professores, orientador escolar ou psicólogo. Você não precisa enfrentar isso sozinho.</p>
+                        </div>
+                        <div class="card">
+                            <h3>3. Busque Ajuda Profissional</h3>
+                            <p>Se os sintomas persistem por mais de 2 semanas ou interferem significativamente na sua vida, procure um psicólogo ou psiquiatra.</p>
+                        </div>
+                        <div class="card">
+                            <h3>4. Pratique Autocuidado</h3>
+                            <p>Durma bem, alimente-se adequadamente, pratique exercícios, reserve tempo para hobbies e atividades prazerosas.</p>
+                        </div>
+                        <div class="card">
+                            <h3>5. Use as Ferramentas</h3>
+                            <p>Explore as ferramentas interativas deste site: teste de ansiedade, diário de humor, exercícios de respiração.</p>
+                        </div>
+                        <div class="card">
+                            <h3>6. Lembre-se</h3>
+                            <p>Saúde mental é tão importante quanto saúde física. Buscar ajuda é sinal de força, não de fraqueza. Você merece se sentir bem!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INFO TAB -->
+            <div id="info" class="tab-content">
+                <div class="hero-section">
+                    <h1>Informações Científicas</h1>
+                    <p>Baseadas em pesquisas da OMS, estudos acadêmicos e evidências científicas sobre saúde mental em ambientes escolares</p>
+                </div>
+
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-brain"></i></div>
+                        <h3>Depressão em Estudantes</h3>
+                        <p><strong>Definição Científica:</strong> Transtorno de humor caracterizado por tristeza profunda, anedonia (perda de prazer), alterações no sono, apetite e energia por pelo menos 2 semanas.</p>
+                        <ul>
+                            <li>Afeta 15-20% dos estudantes globalmente (OMS, 2023)</li>
+                            <li>Pode causar queda de 30-40% no desempenho acadêmico</li>
+                            <li>Tratável com psicoterapia (TCC) e, quando necessário, medicação</li>
+                            <li>Taxa de sucesso do tratamento: 60-80%</li>
+                            <li>Importante buscar ajuda profissional precocemente</li>
+                        </ul>
+                        <p style="margin-top: 1.5rem;"><strong>Sinais de alerta:</strong> Isolamento social persistente, choro frequente, pensamentos negativos recorrentes, dificuldade de concentração, mudanças no sono/apetite, perda de interesse em atividades antes prazerosas.</p>
+                        <p style="margin-top: 1rem;"><strong>Neurobiologia:</strong> Envolve desequilíbrio de neurotransmissores (serotonina, dopamina, noradrenalina) e alterações em áreas cerebrais como córtex pré-frontal e amígdala.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <h3>Transtornos de Ansiedade</h3>
+                        <p><strong>Definição Científica:</strong> Grupo de transtornos caracterizados por preocupação excessiva e persistente que causa sofrimento significativo e interfere nas atividades diárias.</p>
+                        <ul>
+                            <li>Afeta 25-30% dos estudantes (maior prevalência entre transtornos mentais)</li>
+                            <li>Pode causar ataques de pânico (pico de medo intenso em minutos)</li>
+                            <li>Sintomas físicos: taquicardia, sudorese, tremores, falta de ar, náusea</li>
+                            <li>Técnicas de respiração, mindfulness e TCC são eficazes</li>
+                            <li>Resposta ao tratamento: 70-90% de melhora</li>
+                        </ul>
+                        <p style="margin-top: 1.5rem;"><strong>Tipos comuns em estudantes:</strong> Transtorno de Ansiedade Generalizada (TAG), Ansiedade Social, Fobia Específica, Transtorno do Pânico, Ansiedade de Separação.</p>
+                        <p style="margin-top: 1rem;"><strong>Mecanismo:</strong> Hiperativação do sistema de "luta ou fuga" (amígdala) mesmo sem ameaça real, com dificuldade do córtex pré-frontal em regular essa resposta.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-battery-empty"></i></div>
+                        <h3>Burnout Acadêmico</h3>
+                        <p><strong>Definição Científica:</strong> Síndrome de exaustão física, emocional e mental causada por estresse crônico relacionado aos estudos, caracterizada por três dimensões: exaustão, cinismo e ineficácia.</p>
+                        <ul>
+                            <li>Modelo de Maslach adaptado para contexto acadêmico</li>
+                            <li>Causado por sobrecarga crônica e pressão constante</li>
+                            <li>Pode levar à desistência escolar (evasão)</li>
+                            <li>Prevenção: equilíbrio estudo-vida, pausas regulares, autocuidado</li>
+                            <li>Recuperação requer mudanças estruturais, não apenas descanso</li>
+                        </ul>
+                        <p style="margin-top: 1.5rem;"><strong>Sintomas:</strong> Fadiga crônica não aliviada por descanso, desmotivação profunda, irritabilidade, dificuldade de concentração, sentimento de incompetência, distanciamento emocional dos estudos.</p>
+                        <p style="margin-top: 1rem;"><strong>Diferença de estresse:</strong> Estresse é agudo e melhora com descanso; burnout é crônico e requer intervenção mais profunda.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-users"></i></div>
+                        <h3>Pressão Social e Comparação</h3>
+                        <p><strong>O que é:</strong> Estresse causado pela necessidade de se encaixar, ser aceito e atender expectativas sociais, amplificado pela exposição constante a "vidas perfeitas" nas redes sociais.</p>
+                        <ul>
+                            <li>Especialmente intensa na adolescência (desenvolvimento de identidade)</li>
+                            <li>Redes sociais aumentam comparação social em 300%</li>
+                            <li>Pode levar a baixa autoestima e transtornos de imagem corporal</li>
+                            <li>Importante desenvolver autenticidade e autocompaixão</li>
+                        </ul>
+                        <p style="margin-top: 1rem;"><strong>Teoria da Comparação Social:</strong> Tendência natural de avaliar a si mesmo comparando-se com outros, mas pode ser prejudicial quando constante e ascendente (comparar-se com "superiores").</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-moon"></i></div>
+                        <h3>Problemas de Sono e Saúde Mental</h3>
+                        <p><strong>Relação Bidirecional:</strong> Problemas de sono causam problemas mentais, e problemas mentais causam problemas de sono, criando um ciclo vicioso.</p>
+                        <ul>
+                            <li>70% dos estudantes dormem menos que o recomendado (8-10h para adolescentes)</li>
+                            <li>Privação de sono afeta memória, concentração, humor e sistema imunológico</li>
+                            <li>Fortemente relacionado a ansiedade e depressão</li>
+                            <li>Higiene do sono é fundamental: horários regulares, evitar telas antes de dormir</li>
+                        </ul>
+                        <p style="margin-top: 1rem;"><strong>Ciência:</strong> Durante o sono, o cérebro consolida memórias, processa emoções e remove toxinas. Privação crônica altera neurotransmissores e aumenta cortisol (hormônio do estresse).</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-shield-alt"></i></div>
+                        <h3>Resiliência Mental</h3>
+                        <p><strong>Definição:</strong> Capacidade de se adaptar positivamente e se recuperar de adversidades, estresse e situações traumáticas.</p>
+                        <ul>
+                            <li>Não é traço fixo - pode ser desenvolvida e fortalecida</li>
+                            <li>Envolve autoconhecimento, autocompaixão e flexibilidade cognitiva</li>
+                            <li>Rede de apoio social é fator protetor essencial</li>
+                            <li>Práticas diárias fazem diferença: mindfulness, gratidão, exercício</li>
+                        </ul>
+                        <p style="margin-top: 1rem;"><strong>Fatores de Resiliência:</strong> Conexões sociais fortes, pensamento positivo realista, senso de propósito, habilidades de resolução de problemas, regulação emocional, autocuidado.</p>
+                    </div>
+                </div>
+
+                <div class="tool-container" style="margin-top: 3rem;">
+                    <h3><i class="fas fa-microscope"></i> Dados Científicos Importantes</h3>
+                    <p style="color: var(--text-gray); margin-bottom: 2rem; font-size: 1.1rem;">Pesquisas recentes e estatísticas sobre saúde mental em ambientes educacionais:</p>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h3>Prevalência Global (OMS)</h3>
+                            <p>1 em cada 7 adolescentes (10-19 anos) sofre de algum transtorno mental. Ansiedade e depressão são os mais comuns, representando 40% dos casos diagnosticados.</p>
+                            <p style="margin-top: 1rem; color: var(--primary-cyan);"><strong>Fonte:</strong> World Health Organization, 2023</p>
+                        </div>
+                        <div class="card">
+                            <h3>Impacto Acadêmico</h3>
+                            <p>Estudos longitudinais mostram que problemas de saúde mental não tratados podem reduzir o desempenho acadêmico em até 40% e aumentar o risco de evasão escolar em 2-3 vezes.</p>
+                            <p style="margin-top: 1rem; color: var(--primary-cyan);"><strong>Fonte:</strong> Journal of School Psychology, 2022</p>
+                        </div>
+                        <div class="card">
+                            <h3>Eficácia do Tratamento</h3>
+                            <p>A Terapia Cognitivo-Comportamental (TCC) tem eficácia comprovada de 60-80% no tratamento de ansiedade e depressão em jovens, com resultados mantidos a longo prazo.</p>
+                            <p style="margin-top: 1rem; color: var(--primary-cyan);"><strong>Fonte:</strong> American Psychological Association, 2023</p>
+                        </div>
+                        <div class="card">
+                            <h3>Prevenção e Intervenção Precoce</h3>
+                            <p>Programas de prevenção em escolas reduzem a incidência de transtornos mentais em 20-30% e melhoram significativamente o clima escolar e desempenho acadêmico.</p>
+                            <p style="margin-top: 1rem; color: var(--primary-cyan);"><strong>Fonte:</strong> Lancet Psychiatry, 2021</p>
+                        </div>
+                        <div class="card">
+                            <h3>Impacto das Redes Sociais</h3>
+                            <p>Uso de redes sociais por mais de 3 horas/dia está associado a aumento de 35% no risco de problemas de saúde mental em adolescentes, especialmente ansiedade e depressão.</p>
+                            <p style="margin-top: 1rem; color: var(--primary-cyan);"><strong>Fonte:</strong> JAMA Psychiatry, 2023</p>
+                        </div>
+                        <div class="card">
+                            <h3>Exercício Físico e Saúde Mental</h3>
+                            <p>Atividade física regular (150 min/semana) reduz sintomas de ansiedade e depressão em 25-30%, com efeitos comparáveis a medicamentos em casos leves a moderados.</p>
+                            <p style="margin-top: 1rem; color: var(--primary-cyan);"><strong>Fonte:</strong> British Journal of Sports Medicine, 2023</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-container">
+                    <h3><i class="fas fa-book-medical"></i> Recursos Científicos Adicionais</h3>
+                    <p style="color: var(--text-gray); margin-bottom: 2rem;">Organizações e publicações confiáveis para aprofundar conhecimento:</p>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: 1rem; background: rgba(255, 255, 255, 0.05); margin-bottom: 1rem; border-radius: 10px;">
+                            <strong style="color: var(--primary-cyan);">Organização Mundial da Saúde (OMS)</strong><br>
+                            <span style="color: var(--text-gray);">Dados globais sobre saúde mental de adolescentes e jovens</span>
+                        </li>
+                        <li style="padding: 1rem; background: rgba(255, 255, 255, 0.05); margin-bottom: 1rem; border-radius: 10px;">
+                            <strong style="color: var(--primary-cyan);">American Psychological Association (APA)</strong><br>
+                            <span style="color: var(--text-gray);">Pesquisas sobre eficácia de tratamentos psicológicos</span>
+                        </li>
+                        <li style="padding: 1rem; background: rgba(255, 255, 255, 0.05); margin-bottom: 1rem; border-radius: 10px;">
+                            <strong style="color: var(--primary-cyan);">National Institute of Mental Health (NIMH)</strong><br>
+                            <span style="color: var(--text-gray);">Estudos sobre neurobiologia dos transtornos mentais</span>
+                        </li>
+                        <li style="padding: 1rem; background: rgba(255, 255, 255, 0.05); margin-bottom: 1rem; border-radius: 10px;">
+                            <strong style="color: var(--primary-cyan);">Ministério da Saúde do Brasil</strong><br>
+                            <span style="color: var(--text-gray);">Políticas públicas e dados nacionais sobre saúde mental</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Enhanced VIDEOS TAB with more videos -->
+            <div id="videos" class="tab-content">
+                <div class="hero-section">
+                    <h1>Vídeos Educativos</h1>
+                    <p>Conteúdos selecionados de especialistas sobre saúde mental, bem-estar e autocuidado para estudantes</p>
+                </div>
+
+                <div class="video-grid">
+                    <div class="video-card">
+                        <iframe src="https://www.youtube.com/embed/ZwcAeJRLqbo" allowfullscreen></iframe>
+                        <div class="video-info">
+                            <h4>Ansiedade: Como Identificar e Tratar</h4>
+                            <p>Dr. Drauzio Varella explica de forma clara os sintomas da ansiedade, quando ela se torna um transtorno e como buscar ajuda profissional adequada.</p>
+                        </div>
+                    </div>
+
+                    <div class="video-card">
+                        <iframe src="https://www.youtube.com/embed/8Su5VtKeXU8" allowfullscreen></iframe>
+                        <div class="video-info">
+                            <h4>Depressão em Jovens e Adolescentes</h4>
+                            <p>Entenda os sinais específicos de depressão na adolescência, diferenças da tristeza normal e a importância do tratamento precoce.</p>
+                        </div>
+                    </div>
+
+                    <div class="video-card">
+                        <iframe src="https://www.youtube.com/embed/aXItOY0sLRY" allowfullscreen></iframe>
+                        <div class="video-info">
+                            <h4>Como Lidar com o Estresse Escolar</h4>
+                            <p>Técnicas práticas e cientificamente comprovadas para gerenciar o estresse do dia a dia escolar e manter o equilíbrio emocional.</p>
+                        </div>
+                    </div>
+
+                    <div class="video-card">
+                        <iframe src="https://www.youtube.com/embed/inpok4MKVLM" allowfullscreen></iframe>
+                        <div class="video-info">
+                            <h4>Mindfulness para Estudantes</h4>
+                            <p>Aprenda práticas de atenção plena (mindfulness) para melhorar foco, reduzir ansiedade e aumentar bem-estar no ambiente escolar.</p>
+                        </div>
+                    </div>
+
+                    <div class="video-card">
+                        <iframe src="https://www.youtube.com/embed/NOAgplgTxfc" allowfullscreen></iframe>
+                        <div class="video-info">
+                            <h4>Burnout: Sinais e Prevenção</h4>
+                            <p>Como identificar os sinais de esgotamento mental nos estudos e estratégias eficazes para prevenir o burnout acadêmico.</p>
+                        </div>
+                    </div>
+
+                    <div class="video-card">
+                        <iframe src="https://www.youtube.com/embed/rkZl2gsLUp4" allowfullscreen></iframe>
+                        <div class="video-info">
+                            <h4>A Importância da Saúde Mental na Escola</h4>
+                            <p>Por que é fundamental falar sobre saúde mental no ambiente escolar e como isso beneficia toda a comunidade educacional.</p>
+                        </div>
+                    </div>
+
+                    <div class="video-card">
+                        <iframe src="https://www.youtube.com/embed/3QIfkeA6HBY" allowfullscreen></iframe>
+                        <div class="video-info">
+                            <h4>Técnicas de Respiração para Ansiedade</h4>
+                            <p>Aprenda exercícios de respiração simples e eficazes para controlar crises de ansiedade e acalmar a mente rapidamente.</p>
+                        </div>
+                    </div>
+
+                    <div class="video-card">
+                        <iframe src="https://www.youtube.com/embed/Jyy0ra2WcQQ" allowfullscreen></iframe>
+                        <div class="video-info">
+                            <h4>Autoestima e Saúde Mental</h4>
+                            <p>A relação entre autoestima e saúde mental, e como desenvolver uma autoimagem mais positiva e realista.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-container" style="margin-top: 3rem;">
+                    <h3><i class="fas fa-youtube"></i> Canais Recomendados</h3>
+                    <p style="color: var(--text-gray); margin-bottom: 2rem;">Canais do YouTube com conteúdo confiável sobre saúde mental:</p>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h3>Drauzio Varella</h3>
+                            <p>Médico renomado com vídeos educativos sobre diversos temas de saúde, incluindo saúde mental.</p>
+                        </div>
+                        <div class="card">
+                            <h3>Psicologia MST</h3>
+                            <p>Conteúdo sobre psicologia, saúde mental e desenvolvimento pessoal com linguagem acessível.</p>
+                        </div>
+                        <div class="card">
+                            <h3>Saúde da Mente</h3>
+                            <p>Canal especializado em saúde mental com psicólogos e psiquiatras explicando transtornos e tratamentos.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TOOLS TAB -->
+            <div id="tools" class="tab-content">
+                <div class="hero-section">
+                    <h1>Ferramentas Interativas</h1>
+                    <p>Recursos práticos baseados em evidências científicas para autoconhecimento, monitoramento e bem-estar emocional</p>
+                </div>
+
+                <!-- ANXIETY TEST -->
+                <div class="tool-container">
+                    <h3><i class="fas fa-clipboard-check"></i> Teste de Ansiedade (GAD-7)</h3>
+                    <p style="color: var(--text-gray); margin-bottom: 2rem;">O GAD-7 (Generalized Anxiety Disorder-7) é uma escala validada cientificamente para avaliar sintomas de ansiedade. Responda sobre como você se sentiu nas últimas 2 semanas:</p>
+                    
+                    <div class="quiz-question">
+                        <h4>1. Sentir-se nervoso(a), ansioso(a) ou muito tenso(a)?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectOption(this, 'q1', 0)">Nenhuma vez (0)</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q1', 1)">Vários dias (1)</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q1', 2)">Mais da metade dos dias (2)</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q1', 3)">Quase todos os dias (3)</div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-question">
+                        <h4>2. Não ser capaz de impedir ou controlar preocupações?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectOption(this, 'q2', 0)">Nenhuma vez (0)</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q2', 1)">Vários dias (1)</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q2', 2)">Mais da metade dos dias (2)</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q2', 3)">Quase todos os dias (3)</div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-question">
+                        <h4>3. Preocupar-se muito com diversas coisas?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectOption(this, 'q3', 0)">Nenhuma vez (0)</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q3', 1)">Vários dias (1)</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q3', 2)">Mais da metade dos dias (2)</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q3', 3)">Quase todos os dias (3)</div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-question">
+                        <h4>4. Dificuldade para relaxar?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectOption(this, 'q4', 0)">Nenhuma vez (0)</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q4', 1)">Vários dias (1)</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q4', 2)">Mais da metade dos dias (2)</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q4', 3)">Quase todos os dias (3)</div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-question">
+                        <h4>5. Ficar tão agitado(a) que se torna difícil permanecer sentado(a)?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectOption(this, 'q5', 0)">Nenhuma vez (0)</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q5', 1)">Vários dias (1)</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q5', 2)">Mais da metade dos dias (2)</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q5', 3)">Quase todos os dias (3)</div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-question">
+                        <h4>6. Ficar facilmente aborrecido(a) ou irritado(a)?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectOption(this, 'q6', 0)">Nenhuma vez (0)</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q6', 1)">Vários dias (1)</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q6', 2)">Mais da metade dos dias (2)</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q6', 3)">Quase todos os dias (3)</div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-question">
+                        <h4>7. Sentir medo como se algo horrível pudesse acontecer?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectOption(this, 'q7', 0)">Nenhuma vez (0)</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q7', 1)">Vários dias (1)</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q7', 2)">Mais da metade dos dias (2)</div>
+                            <div class="quiz-option" onclick="selectOption(this, 'q7', 3)">Quase todos os dias (3)</div>
+                        </div>
+                    </div>
+
+                    <button class="submit-btn" onclick="calculateAnxiety()">Ver Resultado</button>
+
+                    <div id="anxiety-result" class="result-box">
+                        <h4>Seu Resultado:</h4>
+                        <p id="anxiety-score"></p>
+                        <p id="anxiety-interpretation"></p>
+                    </div>
+                </div>
+
+                <!-- MOOD TRACKER -->
+                <div class="tool-container">
+                    <h3><i class="fas fa-smile"></i> Diário de Humor</h3>
+                    <p style="color: var(--text-gray); margin-bottom: 1.5rem;">Monitorar seu humor diariamente ajuda a identificar padrões, gatilhos e progressos. Como você está se sentindo hoje?</p>
+                    
+                    <div class="mood-selector">
+                        <div class="mood-btn" onclick="selectMood(this, '😊', 'Muito Bem')" title="Muito Bem">😊</div>
+                        <div class="mood-btn" onclick="selectMood(this, '🙂', 'Bem')" title="Bem">🙂</div>
+                        <div class="mood-btn" onclick="selectMood(this, '😐', 'Neutro')" title="Neutro">😐</div>
+                        <div class="mood-btn" onclick="selectMood(this, '😔', 'Triste')" title="Triste">😔</div>
+                        <div class="mood-btn" onclick="selectMood(this, '😰', 'Ansioso')" title="Ansioso">😰</div>
+                    </div>
+
+                    <div style="margin-top: 2.5rem;">
+                        <label style="display: block; margin-bottom: 0.8rem; color: var(--text-light); font-size: 1.1rem; font-weight: 600;">Notas (opcional):</label>
+                        <textarea id="mood-notes" placeholder="Como foi seu dia? O que você sentiu? O que aconteceu de importante?"></textarea>
+                        <button class="submit-btn" onclick="saveMood()" style="margin-top: 1.5rem;">
+                            <i class="fas fa-save"></i> Salvar no Diário
+                        </button>
+                    </div>
+
+                    <div class="mood-history" id="mood-history">
+                        <h4 style="margin-bottom: 1.5rem; font-size: 1.5rem;">Histórico de Humor</h4>
+                        <p style="color: var(--text-gray);">Seus registros aparecerão aqui...</p>
+                    </div>
+                </div>
+
+                <!-- BREATHING EXERCISE -->
+                <div class="tool-container">
+                    <h3><i class="fas fa-wind"></i> Exercício de Respiração 4-7-8</h3>
+                    <p style="color: var(--text-gray); margin-bottom: 2rem;">Técnica desenvolvida pelo Dr. Andrew Weil, baseada em práticas de yoga. Comprovadamente eficaz para reduzir ansiedade, estresse e ajudar a dormir.</p>
+                    
+                    <div style="text-align: center;">
+                        <div style="width: 250px; height: 250px; margin: 2.5rem auto; border-radius: 50%; background: linear-gradient(135deg, var(--primary-cyan), var(--primary-purple)); display: flex; align-items: center; justify-content: center; font-size: 3.5rem; font-weight: 900; box-shadow: 0 20px 60px rgba(0, 245, 255, 0.4); transition: all 0.5s ease;" id="breathing-circle">
+                            Iniciar
+                        </div>
+                        <button class="submit-btn" onclick="startBreathing()">
+                            <i class="fas fa-play"></i> Começar Exercício
+                        </button>
+                        <p style="margin-top: 1.5rem; color: var(--text-gray); font-size: 1.1rem;" id="breathing-instruction">Clique para começar o exercício de respiração</p>
+                        
+                        <div style="margin-top: 3rem; padding: 2rem; background: rgba(255, 255, 255, 0.05); border-radius: 15px; text-align: left;">
+                            <h4 style="color: var(--primary-cyan); margin-bottom: 1rem;">Como funciona:</h4>
+                            <ul style="color: var(--text-gray); line-height: 2;">
+                                <li><strong>4 segundos:</strong> Inspire profundamente pelo nariz</li>
+                                <li><strong>7 segundos:</strong> Segure a respiração</li>
+                                <li><strong>8 segundos:</strong> Expire completamente pela boca</li>
+                                <li><strong>Repita:</strong> 4 ciclos completos</li>
+                            </ul>
+                            <p style="margin-top: 1rem; color: var(--text-gray);">
+                                <strong>Benefícios:</strong> Ativa o sistema nervoso parassimpático (relaxamento), reduz cortisol (hormônio do estresse), melhora oxigenação cerebral.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RESOURCES TAB -->
+            <div id="resources" class="tab-content">
+                <div class="hero-section">
+                    <h1>Recursos e Apoio</h1>
+                    <p>Onde buscar ajuda profissional, informações confiáveis e suporte emocional 24 horas</p>
+                </div>
+
+                <div class="resource-list">
+                    <div class="resource-item">
+                        <div class="resource-icon"><i class="fas fa-phone"></i></div>
+                        <div class="resource-content">
+                            <h4>CVV - Centro de Valorização da Vida</h4>
+                            <p>Apoio emocional e prevenção do suicídio. Atendimento gratuito 24 horas por dia, 7 dias por semana, por telefone, chat e e-mail. Voluntários treinados oferecem escuta ativa e acolhimento.</p>
+                            <a href="tel:188" class="resource-link"><i class="fas fa-phone-alt"></i> Ligue 188 (gratuito) ou acesse cvv.org.br</a>
+                        </div>
+                    </div>
+
+                    <div class="resource-item">
+                        <div class="resource-icon"><i class="fas fa-hospital"></i></div>
+                        <div class="resource-content">
+                            <h4>CAPS - Centro de Atenção Psicossocial</h4>
+                            <p>Atendimento público e gratuito em saúde mental pelo SUS. Oferece consultas com psicólogos, psiquiatras, terapia em grupo e acompanhamento contínuo.</p>
+                            <a href="https://www.gov.br/saude/pt-br" class="resource-link"><i class="fas fa-map-marker-alt"></i> Encontre o CAPS mais próximo de você</a>
+                        </div>
+                    </div>
+
+                    <div class="resource-item">
+                        <div class="resource-icon"><i class="fas fa-user-md"></i></div>
+                        <div class="resource-content">
+                            <h4>Psicólogo Escolar</h4>
+                            <p>Muitas escolas oferecem atendimento psicológico gratuito para estudantes. O psicólogo escolar pode ajudar com questões acadêmicas, emocionais e sociais.</p>
+                            <a href="#" class="resource-link"><i class="fas fa-school"></i> Consulte a coordenação ou orientação da sua escola</a>
+                        </div>
+                    </div>
+
+                    <div class="resource-item">
+                        <div class="resource-icon"><i class="fas fa-comments"></i></div>
+                        <div class="resource-content">
+                            <h4>Pode Falar</h4>
+                            <p>Chat online gratuito para jovens de 13 a 24 anos que precisam de apoio emocional. Atendimento por voluntários treinados, de segunda a sexta, das 18h às 22h.</p>
+                            <a href="https://www.podefalar.org.br" class="resource-link"><i class="fas fa-comment-dots"></i> Acesse podefalar.org.br</a>
+                        </div>
+                    </div>
+
+                    <div class="resource-item">
+                        <div class="resource-icon"><i class="fas fa-book-medical"></i></div>
+                        <div class="resource-content">
+                            <h4>Mapa da Saúde Mental</h4>
+                            <p>Plataforma que reúne serviços de saúde mental gratuitos e de baixo custo em todo o Brasil. Busque por cidade, tipo de atendimento e especialidade.</p>
+                            <a href="https://mapadasaudemental.com.br" class="resource-link"><i class="fas fa-search"></i> Buscar serviços na sua região</a>
+                        </div>
+                    </div>
+
+                    <div class="resource-item">
+                        <div class="resource-icon"><i class="fas fa-mobile-alt"></i></div>
+                        <div class="resource-content">
+                            <h4>Apps de Saúde Mental</h4>
+                            <p>Aplicativos de meditação, mindfulness e bem-estar: Headspace, Calm, Lojong, Zen, Meditopia. Muitos oferecem conteúdo gratuito e programas específicos para estudantes.</p>
+                            <a href="#" class="resource-link"><i class="fas fa-download"></i> Disponíveis nas lojas de apps iOS e Android</a>
+                        </div>
+                    </div>
+
+                    <div class="resource-item">
+                        <div class="resource-icon"><i class="fas fa-ambulance"></i></div>
+                        <div class="resource-content">
+                            <h4>SAMU - Emergências Médicas</h4>
+                            <p>Em caso de emergência médica ou psiquiátrica grave (risco de vida, crise aguda), ligue para o SAMU. Atendimento 24 horas.</p>
+                            <a href="tel:192" class="resource-link"><i class="fas fa-phone-alt"></i> Ligue 192 (gratuito)</a>
+                        </div>
+                    </div>
+
+                    <div class="resource-item">
+                        <div class="resource-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="resource-content">
+                            <h4>Disque 100 - Direitos Humanos</h4>
+                            <p>Canal para denúncias de violações de direitos humanos, incluindo violência contra crianças e adolescentes. Atendimento 24 horas, gratuito e anônimo.</p>
+                            <a href="tel:100" class="resource-link"><i class="fas fa-phone-alt"></i> Ligue 100 (gratuito)</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-container" style="margin-top: 3rem;">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Quando Buscar Ajuda Profissional Imediatamente</h3>
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h3>Sinais de Alerta Graves</h3>
+                            <ul>
+                                <li>Pensamentos suicidas ou de autolesão</li>
+                                <li>Planos específicos de se machucar</li>
+                                <li>Comportamento autodestrutivo</li>
+                                <li>Alucinações ou delírios</li>
+                                <li>Mudanças drásticas e súbitas no comportamento</li>
+                                <li>Isolamento social extremo e prolongado</li>
+                            </ul>
+                            <p style="margin-top: 1.5rem; color: var(--primary-pink);"><strong>Ação:</strong> Ligue 188 (CVV) ou 192 (SAMU) imediatamente.</p>
+                        </div>
+                        <div class="card">
+                            <h3>Sinais de Que Você Precisa de Ajuda</h3>
+                            <ul>
+                                <li>Tristeza ou ansiedade persistente (mais de 2 semanas)</li>
+                                <li>Dificuldade para realizar atividades diárias</li>
+                                <li>Problemas de sono ou apetite significativos</li>
+                                <li>Uso de substâncias para lidar com emoções</li>
+                                <li>Queda acentuada no desempenho escolar</li>
+                                <li>Conflitos frequentes com família/amigos</li>
+                            </ul>
+                            <p style="margin-top: 1.5rem; color: var(--primary-cyan);"><strong>Ação:</strong> Agende consulta com psicólogo ou psiquiatra.</p>
+                        </div>
+                        <div class="card">
+                            <h3>Não Tenha Vergonha ou Medo</h3>
+                            <p>Buscar ajuda é sinal de <strong>força e autocuidado</strong>, não de fraqueza. Problemas de saúde mental são comuns, tratáveis e não definem quem você é.</p>
+                            <p style="margin-top: 1rem;">Você não está sozinho(a). Milhões de pessoas passam por desafios semelhantes e encontram ajuda e recuperação.</p>
+                            <p style="margin-top: 1rem;"><strong>Lembre-se:</strong> Assim como cuidamos do corpo quando ficamos doentes, precisamos cuidar da mente. Não há nada de errado em pedir ajuda.</p>
+                            <p style="margin-top: 1rem; color: var(--primary-green);"><strong>Você merece se sentir bem e ser feliz!</strong></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-container">
+                    <h3><i class="fas fa-heart"></i> Mensagem Final</h3>
+                    <p style="font-size: 1.2rem; line-height: 2; color: var(--text-gray); text-align: center; max-width: 800px; margin: 0 auto;">
+                        Sua saúde mental é tão importante quanto sua saúde física. Cuidar de si mesmo não é egoísmo, é necessidade. 
+                        Você é valioso(a), suas emoções são válidas e você merece apoio e compreensão. 
+                        Não hesite em buscar ajuda quando precisar. Há pessoas e recursos disponíveis para você. 
+                        <strong style="color: var(--primary-cyan);">Você não está sozinho(a) nessa jornada.</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- EMERGENCY BUTTON -->
+        <button class="emergency-btn" onclick="showEmergency()">
+            <i class="fas fa-exclamation-circle"></i> Preciso de Ajuda Agora
+        </button>
+    </div>
+
+    <script>
+        // QUIZ ANSWERS
+        let quizAnswers = {};
+        let selectedMood = null;
+        let moodHistory = JSON.parse(localStorage.getItem('moodHistory')) || [];
+
+        // LOGIN
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username && password) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-app').style.display = 'block';
+                document.getElementById('user-name').textContent = username;
+                document.getElementById('user-avatar').textContent = username.charAt(0).toUpperCase();
+                
+                displayMoodHistory();
+            }
+        });
+
+        // LOGOUT
+        function logout() {
+            document.getElementById('main-app').style.display = 'none';
+            document.getElementById('login-screen').style.display = 'flex';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        // TABNAVIGATION
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            const navTabs = document.querySelectorAll('.nav-tab');
+            navTabs.forEach(tab => tab.classList.remove('active'));
+
+            document.getElementById(tabName).classList.add('active');
+            event.target.closest('.nav-tab').classList.add('active');
+        }
+
+        // QUIZ FUNCTIONS
+        function selectOption(element, question, value) {
+            const siblings = element.parentElement.querySelectorAll('.quiz-option');
+            siblings.forEach(sib => sib.classList.remove('selected'));
+            element.classList.add('selected');
+            quizAnswers[question] = value;
+        }
+
+        function calculateAnxiety() {
+            const total = Object.values(quizAnswers).reduce((a, b) => a + b, 0);
+            const resultBox = document.getElementById('anxiety-result');
+            const scoreText = document.getElementById('anxiety-score');
+            const interpretationText = document.getElementById('anxiety-interpretation');
+
+            let interpretation = '';
+            if (total <= 4) {
+                interpretation = '<strong style="color: var(--primary-green);">Ansiedade Mínima (0-4 pontos):</strong> Seus níveis de ansiedade estão baixos e dentro do esperado. Continue cuidando do seu bem-estar com práticas saudáveis!';
+            } else if (total <= 9) {
+                interpretation = '<strong style="color: var(--primary-cyan);">Ansiedade Leve (5-9 pontos):</strong> Você apresenta alguns sintomas de ansiedade. Considere praticar técnicas de relaxamento, exercícios físicos e mindfulness regularmente.';
+            } else if (total <= 14) {
+                interpretation = '<strong style="color: #ffaa00;">Ansiedade Moderada (10-14 pontos):</strong> Seus sintomas de ansiedade são significativos e podem estar interferindo em sua vida. Recomendamos fortemente buscar apoio profissional (psicólogo ou psiquiatra).';
+            } else {
+                interpretation = '<strong style="color: var(--primary-pink);">Ansiedade Severa (15-21 pontos):</strong> Você está apresentando sintomas graves de ansiedade que provavelmente estão causando sofrimento significativo. É muito importante buscar ajuda profissional o quanto antes. Ligue 188 (CVV) se precisar de apoio imediato.';
+            }
+
+            scoreText.innerHTML = `<strong>Pontuação: ${total} de 21</strong>`;
+            interpretationText.innerHTML = interpretation + '<br><br><em style="color: var(--text-gray);">⚠️ Nota Importante: Este teste é apenas uma ferramenta de triagem, não substitui avaliação profissional. Para diagnóstico preciso e tratamento adequado, consulte um psicólogo ou psiquiatra.</em>';
+            resultBox.classList.add('show');
+            resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function displayMoodHistory() {
+            const historyDiv = document.getElementById('mood-history');
+            
+            if (moodHistory.length === 0) {
+                historyDiv.innerHTML = '<h4 style="margin-bottom: 1rem; color: var(--text-gray);">Nenhum registro ainda. Comece a registrar seus humores!</h4>';
+                return;
+            }
+
+            let html = '<h4 style="margin-bottom: 1.5rem; color: var(--primary-cyan);"><i class="fas fa-history"></i> Histórico de Humores</h4>';
+            
+            moodHistory.slice(0, 10).forEach((entry, index) => {
+                html += `
+                    <div class="mood-entry" style="background: var(--glass-bg); padding: 1rem; border-radius: 12px; margin-bottom: 1rem; border-left: 4px solid var(--primary-cyan); animation: fadeIn 0.5s ease-out ${index * 0.1}s both;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span style="font-size: 2rem;">${entry.mood.emoji}</span>
+                            <span style="color: var(--text-gray); font-size: 0.9rem;">${entry.date}</span>
+                        </div>
+                        <div style="color: var(--primary-cyan); font-weight: 600; margin-bottom: 0.5rem;">${entry.mood.label}</div>
+                        ${entry.notes ? `<div style="color: var(--text-gray); font-size: 0.95rem; font-style: italic;">"${entry.notes}"</div>` : ''}
+                    </div>
+                `;
+            });
+
+            historyDiv.innerHTML = html;
+        }
+
+        // MOOD TRACKER
+        function selectMood(element, emoji, label) {
+            const moods = document.querySelectorAll('.mood-btn');
+            moods.forEach(mood => mood.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedMood = { emoji, label };
+        }
+
+        function saveMood() {
+            if (!selectedMood) {
+                alert('Por favor, selecione um humor primeiro!');
+                return;
+            }
+
+            const notes = document.getElementById('mood-notes').value;
+            const entry = {
+                date: new Date().toLocaleString('pt-BR'),
+                mood: selectedMood,
+                notes: notes
+            };
+
+            moodHistory.unshift(entry);
+            localStorage.setItem('moodHistory', JSON.stringify(moodHistory));
+
+            document.getElementById('mood-notes').value = '';
+            const moods = document.querySelectorAll('.mood-btn');
+            moods.forEach(mood => mood.classList.remove('selected'));
+            selectedMood = null;
+
+            displayMoodHistory();
+            alert('✅ Humor registrado com sucesso no seu diário!');
+        }
+
+        let breathingInterval;
+        let breathingPhase = 0;
+
+        function startBreathing() {
+            const circle = document.getElementById('breathing-circle');
+            const instruction = document.getElementById('breathing-instruction');
+            const phases = [
+                { text: 'Inspire pelo nariz...', duration: 4000, scale: 1.5, color: 'var(--primary-cyan)' },
+                { text: 'Segure a respiração...', duration: 7000, scale: 1.5, color: 'var(--primary-purple)' },
+                { text: 'Expire pela boca...', duration: 8000, scale: 1, color: 'var(--primary-pink)' }
+            ];
+
+            function runPhase() {
+                const phase = phases[breathingPhase];
+                instruction.textContent = phase.text;
+                circle.style.transform = `scale(${phase.scale})`;
+                circle.style.borderColor = phase.color;
+                circle.style.boxShadow = `0 0 60px ${phase.color}`;
+
+                breathingPhase = (breathingPhase + 1) % phases.length;
+            }
+
+            runPhase();
+            breathingInterval = setInterval(runPhase, 4000 + 7000 + 8000);
+        }
+
+        function stopBreathing() {
+            clearInterval(breathingInterval);
+            const circle = document.getElementById('breathing-circle');
+            const instruction = document.getElementById('breathing-instruction');
+            circle.style.transform = 'scale(1)';
+            instruction.textContent = 'Clique em "Iniciar" para começar';
+            breathingPhase = 0;
+        }
+
+        function showEmergency() {
+            alert('🆘 AJUDA IMEDIATA DISPONÍVEL:\n\n📞 CVV - 188 (24h, gratuito)\n📞 CAPS - 0800 273 8255\n📞 SAMU - 192\n📞 Bombeiros - 193\n\n💬 Chat CVV: www.cvv.org.br\n\nVocê não está sozinho(a). Há pessoas prontas para ajudar agora mesmo.');
+        }
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards and tool containers
+        setTimeout(() => {
+            document.querySelectorAll('.card, .tool-container, .problem-card').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+                observer.observe(el);
+            });
+        }, 100);
+
+        setTimeout(() => {
+            document.getElementById('intro-screen').style.display = 'none';
+        }, 5500);
+
+        window.addEventListener('load', () => {
+            console.log('[v0] MindCare app loaded successfully');
+        });
+    </script>
+</body>
+</html>
